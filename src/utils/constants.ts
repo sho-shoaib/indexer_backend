@@ -1,0 +1,1 @@
+export const INDEXER_URL = "https://indexer.dev.hyperindex.xyz/e8083cb/v1/graphql"
