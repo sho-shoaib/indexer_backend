@@ -80,4 +80,48 @@ const getAssetById = async (
   }
 };
 
-export { getAssets, addAssets, getAssetById };
+const updateAssetsExchangeRate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<any> => {
+  const exchangeRateQuery = gql`
+      query MyQuerys {
+        Asset {
+          id
+          exchange_rate_usdc
+          exchange_rate_eth
+          exchange_rate_fuel
+        }
+      }
+    `;
+
+    //@ts-ignore
+    const result = await client.query(exchangeRateQuery);
+
+    console.log(result.data.Asset);
+
+    const updatedAssets = [];
+  console.log(result.data.Asset.length);
+  
+
+    for (const asset of result.data.Asset) {
+      const updatedAsset = await Asset.update({
+        exchange_rate_eth: asset.exchange_rate_eth,
+        exchange_rate_usdc: asset.exchange_rate_usdc,
+        exchange_rate_fuel: asset.exchange_rate_fuel
+      }, {
+        where: {
+          asset_id: asset.id
+        }
+      })
+
+      updatedAssets.push({asset_id: asset.id, exchange_rate_eth: asset.exchange_rate_eth,
+        exchange_rate_usdc: asset.exchange_rate_usdc,
+        exchange_rate_fuel: asset.exchange_rate_fuel})
+    }
+
+    res.status(200).json(updatedAssets)
+}
+
+export { getAssets, addAssets, getAssetById, updateAssetsExchangeRate };

@@ -5,7 +5,7 @@ import { CustomError } from "../../utils/error_factory";
 export const addAsset = async (asset: any, next: NextFunction) => {
   try {
     const toAdd = {
-      asset_id: asset.id,
+      asset_id: asset.asset_id,
       name: asset.name,
       symbol: asset.symbol,
       decimals: asset.decimals,
@@ -21,7 +21,7 @@ export const addAsset = async (asset: any, next: NextFunction) => {
     //@ts-ignore
     const [newAsset, created] = await Asset.findOrCreate({
       where: {
-        asset_id: asset.id,
+        asset_id: asset.asset_id,
       },
       defaults: toAdd,
     });
